@@ -28,51 +28,18 @@ const Login = () => {
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
     setError('');
 
     try {
       if (isSignUp) {
-        const result = await signUpWithTimeout(email, password);
-        if (result.error) throw result.error;
-        setError('✅ Check your email for verification link!');
+        await signUp(email, password);
+        setError('✅ Account created successfully!');
       } else {
-        // Try Supabase auth first
-        try {
-          const { data, error } = await signInWithTimeout(email, password);
-          if (error) throw error;
-
-          if (data.user) {
-            const { data: userData } = await supabase
-              .from('users')
-              .select('role, organizations(plan)')
-              .eq('id', data.user.id)
-              .single();
-
-            if (userData?.role === 'admin') {
-              navigate('/admin-portal');
-            } else {
-              navigate('/dashboard');
-            }
-          }
-        } catch (authError: any) {
-          // Try fallback auth if Supabase fails
-          const fallbackResult = await tryFallbackLogin(email, password);
-          if (fallbackResult.success) {
-            if (fallbackResult.user?.role === 'admin') {
-              navigate('/admin-portal');
-            } else {
-              navigate('/dashboard');
-            }
-          } else {
-            throw authError;
-          }
-        }
+        await signIn(email, password);
+        // Navigation is handled by the useEffect hook
       }
     } catch (error: any) {
       setError(error?.message || 'Authentication failed. Please try again.');
-    } finally {
-      setLoading(false);
     }
   };
 
