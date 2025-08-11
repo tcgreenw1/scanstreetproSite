@@ -59,7 +59,13 @@ if (usingPlaceholder) {
       }),
       insert: () => ({
         select: () => ({
-          single: () => Promise.resolve({ data: null, error: { message: 'Offline mode - cannot insert data' } })
+          single: () => Promise.resolve({
+            data: {
+              id: 'mock-id-' + Math.random().toString(36).substr(2, 9),
+              created_at: new Date().toISOString()
+            },
+            error: null
+          })
         })
       })
     })
@@ -391,7 +397,7 @@ export const getUserOrganization = async () => {
 
       // If no user found, return null gracefully
       if (!data) {
-        console.warn('���️ User not found in database:', user.id);
+        console.warn('������ User not found in database:', user.id);
         return null;
       }
 
@@ -955,7 +961,7 @@ export const ensureDemoUsersExist = async () => {
             console.error(`Failed to create db user ${demoUser.email}:`, errorMessage);
           }
         } else {
-          console.log(`�� Created demo user: ${demoUser.email}`);
+          console.log(`✅ Created demo user: ${demoUser.email}`);
         }
       } else {
         console.log(`ℹ️ Demo user already exists: ${demoUser.email}`);
