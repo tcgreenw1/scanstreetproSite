@@ -13,7 +13,7 @@ import { Layout } from "./components/Layout";
 import { PlaceholderPage } from "./components/PlaceholderPage";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { PricingProvider } from "./contexts/PricingContext";
-import { AuthProvider } from "./contexts/AuthContext";
+import { AuthProvider } from "./contexts/SimpleAuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import RoadInspection from "./pages/RoadInspection";
 import Dashboard from "./pages/Dashboard";
