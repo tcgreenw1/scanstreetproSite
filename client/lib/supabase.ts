@@ -22,6 +22,9 @@ const usingPlaceholder = !supabaseUrl || !supabaseAnonKey;
 
 if (usingPlaceholder) {
   console.warn('⚠️ Supabase configuration missing! Running in offline mode with mock data.');
+  console.warn('🔧 To connect to Supabase, set these environment variables:');
+  console.warn('   VITE_SUPABASE_URL=https://your-project.supabase.co');
+  console.warn('   VITE_SUPABASE_ANON_KEY=your-anon-key');
 
   // Create a mock client for offline mode
   supabase = {
