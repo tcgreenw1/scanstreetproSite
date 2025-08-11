@@ -1,4 +1,3 @@
-import { createClient } from '@supabase/supabase-js';
 import { getErrorMessage } from '@/utils/errorHandler';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
@@ -397,7 +396,7 @@ export const getUserOrganization = async () => {
 
       // If no user found, return null gracefully
       if (!data) {
-        console.warn('������ User not found in database:', user.id);
+        console.warn('���️ User not found in database:', user.id);
         return null;
       }
 
