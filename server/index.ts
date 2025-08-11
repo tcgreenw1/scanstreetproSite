@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { createServer } from "./createServer.mts";
+import { createServer } from "./createServer";
 
 const port = process.env.PORT || 8080;
 const app = createServer();
