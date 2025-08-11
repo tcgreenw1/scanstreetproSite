@@ -70,27 +70,9 @@ if (usingPlaceholder) {
     })
   };
 } else {
-  supabase = createClient(supabaseUrl, supabaseAnonKey, {
-    auth: {
-      autoRefreshToken: true,
-      persistSession: true,
-      detectSessionInUrl: true,
-      flowType: 'pkce'
-    },
-    global: {
-      headers: {
-        'X-Client-Info': 'scan-street-pro@1.0.0',
-      },
-    },
-    db: {
-      schema: 'public',
-    },
-    realtime: {
-      params: {
-        eventsPerSecond: 10,
-      },
-    },
-  });
+  // Would create real Supabase client here if needed
+  console.warn('Supabase client creation skipped - using Neon instead');
+  supabase = null;
 }
 
 export { supabase };
