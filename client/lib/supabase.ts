@@ -14,13 +14,6 @@ console.log('🔧 Supabase Configuration:', {
   keyValid: supabaseAnonKey?.startsWith('eyJ') ? '✅ Valid JWT format' : '❌ Invalid JWT format'
 });
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('����� Supabase configuration missing! Check environment variables.');
-} else if (!supabaseUrl.includes('supabase.co')) {
-  console.error('❌ Invalid Supabase URL format! Should be https://xxx.supabase.co');
-} else if (!supabaseAnonKey.startsWith('eyJ')) {
-  console.error('❌ Invalid Supabase key format! Should be a JWT token starting with eyJ');
-}
 
 // Create a client that handles missing environment variables gracefully
 let supabase: any;
