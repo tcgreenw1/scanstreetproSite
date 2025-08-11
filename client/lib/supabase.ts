@@ -18,7 +18,7 @@ console.log('🔧 Supabase Configuration:', {
 // Create a client that handles missing environment variables gracefully
 let supabase: any;
 
-const usingPlaceholder = !import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY;
+const usingPlaceholder = !supabaseUrl || !supabaseAnonKey;
 
 if (usingPlaceholder) {
   console.warn('⚠️ Supabase configuration missing! Running in offline mode with mock data.');
