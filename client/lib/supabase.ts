@@ -34,6 +34,16 @@ if (usingPlaceholder) {
       signInWithPassword: () => Promise.resolve({ data: null, error: { message: 'Offline mode - no authentication available' } }),
       signUp: () => Promise.resolve({ data: null, error: { message: 'Offline mode - no authentication available' } }),
       signOut: () => Promise.resolve({ error: null }),
+      onAuthStateChange: (callback: Function) => {
+        // Return a mock subscription object
+        return {
+          data: {
+            subscription: {
+              unsubscribe: () => {}
+            }
+          }
+        };
+      },
       admin: {
         listUsers: () => Promise.resolve({ data: { users: [] }, error: null })
       }
@@ -945,7 +955,7 @@ export const ensureDemoUsersExist = async () => {
             console.error(`Failed to create db user ${demoUser.email}:`, errorMessage);
           }
         } else {
-          console.log(`✅ Created demo user: ${demoUser.email}`);
+          console.log(`�� Created demo user: ${demoUser.email}`);
         }
       } else {
         console.log(`ℹ️ Demo user already exists: ${demoUser.email}`);
