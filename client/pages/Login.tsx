@@ -11,47 +11,20 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [isSignUp, setIsSignUp] = useState(false);
+  const { user, loading, signIn, signUp } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    checkExistingSession();
-  }, []);
-
-  const checkExistingSession = async () => {
-    try {
-      // Check for existing fallback session
-      const fallbackSession = getFallbackSession();
-      if (fallbackSession) {
-        if (fallbackSession.role === 'admin') {
-          navigate('/admin-portal');
-        } else {
-          navigate('/dashboard');
-        }
-        return;
+    if (user) {
+      if (user.role === 'admin') {
+        navigate('/admin-portal');
+      } else {
+        navigate('/dashboard');
       }
-
-      // Check Supabase session
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
-        const { data: userData } = await supabase
-          .from('users')
-          .select('role')
-          .eq('id', session.user.id)
-          .single();
-
-        if (userData?.role === 'admin') {
-          navigate('/admin-portal');
-        } else {
-          navigate('/dashboard');
-        }
-      }
-    } catch (error) {
-      console.log('No active session');
     }
-  };
+  }, [user, navigate]);
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
