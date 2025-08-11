@@ -22,27 +22,67 @@ if (!supabaseUrl || !supabaseAnonKey) {
   console.error('❌ Invalid Supabase key format! Should be a JWT token starting with eyJ');
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    autoRefreshToken: true,
-    persistSession: true,
-    detectSessionInUrl: true,
-    flowType: 'pkce'
-  },
-  global: {
-    headers: {
-      'X-Client-Info': 'scan-street-pro@1.0.0',
+// Create a client that handles missing environment variables gracefully
+let supabase: any;
+
+const usingPlaceholder = !import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+if (usingPlaceholder) {
+  console.warn('⚠️ Supabase configuration missing! Running in offline mode with mock data.');
+
+  // Create a mock client for offline mode
+  supabase = {
+    auth: {
+      getSession: () => Promise.resolve({ data: { session: null }, error: null }),
+      getUser: () => Promise.resolve({ data: { user: null }, error: null }),
+      signInWithPassword: () => Promise.resolve({ data: null, error: { message: 'Offline mode - no authentication available' } }),
+      signUp: () => Promise.resolve({ data: null, error: { message: 'Offline mode - no authentication available' } }),
+      signOut: () => Promise.resolve({ error: null }),
+      admin: {
+        listUsers: () => Promise.resolve({ data: { users: [] }, error: null })
+      }
     },
-  },
-  db: {
-    schema: 'public',
-  },
-  realtime: {
-    params: {
-      eventsPerSecond: 10,
+    from: () => ({
+      select: () => ({
+        eq: () => ({
+          single: () => Promise.resolve({ data: null, error: { code: 'PGRST116', message: 'Offline mode' } }),
+          maybeSingle: () => Promise.resolve({ data: null, error: null }),
+          limit: () => Promise.resolve({ data: [], error: null })
+        }),
+        limit: () => Promise.resolve({ data: [], error: null })
+      }),
+      insert: () => ({
+        select: () => ({
+          single: () => Promise.resolve({ data: null, error: { message: 'Offline mode - cannot insert data' } })
+        })
+      })
+    })
+  };
+} else {
+  supabase = createClient(supabaseUrl, supabaseAnonKey, {
+    auth: {
+      autoRefreshToken: true,
+      persistSession: true,
+      detectSessionInUrl: true,
+      flowType: 'pkce'
     },
-  },
-});
+    global: {
+      headers: {
+        'X-Client-Info': 'scan-street-pro@1.0.0',
+      },
+    },
+    db: {
+      schema: 'public',
+    },
+    realtime: {
+      params: {
+        eventsPerSecond: 10,
+      },
+    },
+  });
+}
+
+export { supabase };
 
 // Database Types
 export interface Database {
@@ -1080,7 +1120,7 @@ export const signOutWithTimeout = async () => {
       throw new Error(errorMessage || 'Sign out failed');
     }
 
-    console.log('✅ Sign out successful');
+    console.log('�� Sign out successful');
     return result;
   } catch (error: any) {
     console.error('❌ Sign out error:', error);
